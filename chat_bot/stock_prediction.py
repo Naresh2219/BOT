@@ -119,11 +119,32 @@ if st.button("Fetch & Predict"):
 # Cryptocurrency Prices
 st.subheader("💰 Live Cryptocurrency Prices (INR ₹)")
 crypto_tickers = ['BTC-USD', 'ETH-USD', 'DOGE-USD']
-crypto_prices = {crypto: yf.Ticker(crypto).history(period='1d')['Close'][-1] * usd_to_inr for crypto in crypto_tickers}
-st.write(pd.DataFrame(crypto_prices.items(), columns=["Cryptocurrency", "Price (INR ₹)"]))
+crypto_prices = {}
+
+for crypto in crypto_tickers:
+    try:
+        ticker = yf.Ticker(crypto)
+        info = ticker.info
+        current_price = info.get('regularMarketPrice', info.get('currentPrice'))
+        if current_price is None:
+            current_price = ticker.history(period='1d')['Close'].iloc[-1]
+        crypto_prices[crypto] = current_price * usd_to_inr
+    except Exception as e:
+        st.error(f"Error fetching price for {crypto}: {e}")
+        crypto_prices[crypto] = "N/A"
+
+st.write(pd.DataFrame({
+    "Cryptocurrency": crypto_tickers,
+    "Current Price (INR ₹)": [crypto_prices[t] for t in crypto_tickers]
+}))
 
 # Upcoming IPO Listings
 st.subheader("🚀 Upcoming IPOs in India")
+st.write("""
+**Note:** IPO data is currently for demonstration purposes only.
+For live IPO data, please check SEBI's official website or financial portals.
+""")
+
 ipo_data = pd.DataFrame({
     "Company": ["XYZ Ltd.", "ABC Tech", "NextGen Pharma"],
     "Issue Price (INR ₹)": [500, 320, 740],
