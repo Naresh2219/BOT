@@ -1,5 +1,3 @@
-## check
-https://naresh2219-bot-chat-botstock-prediction-wdmzye.streamlit.app/
 # Stock Investment & Prediction Dashboard 📈
 
 A Streamlit web app for stock price prediction and investment analysis in INR. This app uses historical stock data, machine learning (Random Forest Regressor), and live exchange rates to predict future stock prices and calculate investment returns.
